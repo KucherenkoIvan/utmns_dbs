@@ -64,8 +64,8 @@ SELECT * FROM Employees WHERE First_Name LIKE '%m' AND LEN(First_Name)>5
 SELECT DATEADD(DAY, 13 - (@@DATEFIRST + (DATEPART(WEEKDAY,GETDATE()) %7)), GETDATE())
 
 -- Таблица Employees. Получить список всех сотрудников которые работают в компании больше 17 лет
-SELECT * FROM Employees WHERE DATEDIFF(yy,Hire_Date,GETDATE())>17 OR 
-(DATEDIFF(yy,Hire_Date,GETDATE())=17 AND 
+SELECT * FROM Employees WHERE DATEDIFF(yy,Hire_Date,GETDATE())>17 OR
+(DATEDIFF(yy,Hire_Date,GETDATE())=17 AND
 (MONTH(Hire_Date)<MONTH(GETDATE()) OR (MONTH(Hire_Date)=MONTH(GETDATE()) AND DAY(Hire_Date)<DAY(GETDATE()))))
 
 --Таблица Employees. Получить список всех сотрудников у которых последня цифра телефонного номера нечетная и состоит из 3ех чисел разделенных точкой
@@ -76,7 +76,7 @@ SELECT * FROM Employees WHERE Job_ID LIKE '%#____%' ESCAPE '#' AND Job_ID NOT LI
 
 --Таблица Employees. Получить список всех сотрудников заменив в значении PHONE_NUMBER все '.' на '-'
 SELECT *,
-REPLACE(Phone_Number, '.', '-') AS Phone_Number 
+REPLACE(Phone_Number, '.', '-') AS Phone_Number
 FROM Employees
 
 --Таблица Employees. Получить список всех сотрудников которые пришли на работу в первый день месяца (любого)
@@ -108,7 +108,7 @@ CAST(DATEADD(mi,1,current_timestamp) as nvarchar),'+1 час:'+CAST(DATEADD(hh,1
 '+1 год:'+CAST(DATEADD(yy,1,current_timestamp) as nvarchar)
 
 --Таблица Employees. Получить список всех сотрудников с полными зарплатами (salary + commission_pct(%)) в формате: $24,000.00
-SELECT *, CONVERT(NUMERIC(20,2), Salary + (Salary * (CASE WHEN Commission_Pct is null THEN 0 ELSE Commission_Pct END)/100))  AS Full_Salary FROM Employees
+SELECT *, CONVERT(NUMERIC(20,2), Salary + (Salary * COALESCE(Commission_Pct, 0)/100))  AS Full_Salary FROM Employees
 
 --Таблица Employees. Получить список всех сотрудников и информацию о наличии бонусов к зарплате (Yes/No)
 SELECT t.*, (case when t.Commission_Pct is null then 'NO' else 'YES' END) as 'Наличие_скидки' FROM Employees t
@@ -123,16 +123,16 @@ when Region_ID=4 then 'Africa' END) as 'Region_Name' FROM Countries
 --Таблица Employees. Получить репорт по department_id с минимальной и максимальной зарплатой, с ранней и поздней датой прихода на работу и с количествов сотрудников. Сорировать по количеству сотрудников (по убыванию)
 SELECT Departments.Department_ID, Departments.Department_Name,
 MIN(Employees.Salary) AS MIN_SALARY, MAX(Employees.Salary) AS MAX_SALARY,
-MIN(Employees.Hire_Date) AS MIN_Hire_Date, MAX(Employees.Hire_Date) AS MAX_Hire_Date, COUNT(Employees.Employee_ID) AS KOLVO_SOTRUDNIKOV 
+MIN(Employees.Hire_Date) AS MIN_Hire_Date, MAX(Employees.Hire_Date) AS MAX_Hire_Date, COUNT(Employees.Employee_ID) AS KOLVO_SOTRUDNIKOV
 FROM Departments
-left join Employees on Departments.Department_ID = Employees.Department_ID GROUP BY Departments.Department_ID, Departments.Department_Name ORDER BY KOLVO_SOTRUDNIKOV DESC 
+left join Employees on Departments.Department_ID = Employees.Department_ID GROUP BY Departments.Department_ID, Departments.Department_Name ORDER BY KOLVO_SOTRUDNIKOV DESC
 
 --Таблица Employees. Сколько сотрудников имена которых начинается с одной и той же буквы? Сортировать по количеству. Показывать только те где количество больше 1
-SELECT COUNT(*) as 'Количество', LEFT(First_Name,1) as 'Буква' FROM Employees GROUP BY LEFT(First_Name,1) 
+SELECT COUNT(*) as 'Количество', LEFT(First_Name,1) as 'Буква' FROM Employees GROUP BY LEFT(First_Name,1)
 HAVING COUNT(*)>1 ORDER BY COUNT(*) DESC
 
 --Таблица Employees. Сколько сотрудников которые работают в одном и тоже отделе и получают одинаковую зарплату?
-SELECT DISTINCT Department_ID, Salary, COUNT(*) AS KOLVO_SOTRUDNIKOV FROM Employees GROUP BY Department_ID, Salary 
+SELECT DISTINCT Department_ID, Salary, COUNT(*) AS KOLVO_SOTRUDNIKOV FROM Employees GROUP BY Department_ID, Salary
 
 --Таблица Employees. Получить репорт сколько сотрудников приняли на работу в каждый день недели. Сортировать по количеству
 SELECT COUNT(*) as 'Количество', DATENAME(dw,Hire_Date) as 'День_недели' FROM Employees
@@ -155,7 +155,7 @@ SELECT Department_ID, ROUND(AVG(CAST(Salary as float)),2) as 'Средняя_З�
 select region_id, sum(len(Country_Name)) as SUUUUUM from Countries group by Region_ID HAVING sum(len(Country_Name)) > 60
 
 --Таблица Employees. Получить список department_id в котором работают работники нескольких (>1) job_id
-SELECT Department_ID, COUNT(DISTINCT Job_ID) as 'Количество' FROM Employees GROUP BY Department_ID 
+SELECT Department_ID, COUNT(DISTINCT Job_ID) as 'Количество' FROM Employees GROUP BY Department_ID
 HAVING COUNT(DISTINCT Job_ID)>1
 
 --Таблица Employees. Получить список manager_id у которых количество подчиненных больше 5 и сумма всех зарплат его подчиненных больше 50000
@@ -163,7 +163,7 @@ SELECT Manager_ID, SUM(Salary) as 'ЗП', COUNT(Employee_ID) as 'К' FROM Employ
 GROUP BY Manager_ID HAVING SUM(Salary) > 50000 and COUNT(Employee_ID) > 5
 
 --Таблица Employees. Получить список manager_id у которых средняя зарплата всех его подчиненных находится в промежутке от 6000 до 9000 которые не получают бонусы (commission_pct пустой)
-SELECT Manager_ID, AVG(Salary) as 'Средняя_ЗП' FROM Employees WHERE Commission_Pct IS NULL 
+SELECT Manager_ID, AVG(Salary) as 'Средняя_ЗП' FROM Employees WHERE Commission_Pct IS NULL
 GROUP BY Manager_ID HAVING AVG(Salary) BETWEEN 6000 AND 9000
 
 --Таблица Employees. Получить максимальную зарплату из всех сотрудников job_id которы заканчивается на слово 'CLERK'
@@ -185,7 +185,7 @@ group by Region_Name
 
 --Таблица Employees, Departaments, Locations, Countries, Regions. Получить детальную информацию о каждом сотруднике: First_name, Last_name, Departament, Job, Street, Country, Region
 SELECT First_Name,Last_Name,Department_Name as 'Department',Job_Title as 'Job',Street_Address as 'Street',
-Country_Name as 'Country',Region_Name as 'Region' 
+Country_Name as 'Country',Region_Name as 'Region'
 FROM Employees t JOIN Departments ON t.Department_ID=Departments.Department_ID
 JOIN Jobs ON t.Job_ID=Jobs.Job_ID
 JOIN Locations ON Departments.Location_ID=Locations.Location_ID
@@ -203,7 +203,7 @@ SELECT t.* FROM Employees t LEFT JOIN Employees e ON t.Manager_ID=e.Employee_ID 
 
 --Таблица Employees, Job_history. В таблице Employee хранятся все сотрудники. В таблице Job_history хранятся сотрудники которые покинули компанию. Получить репорт о всех сотрудниках и о его статусе в компании (Работает или покинул компанию с датой ухода)
 select Employees.Employee_ID, Job_History.End_Date from Employees
-left join Job_History on Employees.Employee_ID = Job_History.Employee_ID 
+left join Job_History on Employees.Employee_ID = Job_History.Employee_ID
 
 --Таблица Employees, Departaments, Locations, Countries, Regions. Получить список сотрудников которые живут в Europe (region_name)
 Select e.* FROM Employees e JOIN Departments d on d.Department_ID=e.Department_ID
@@ -213,7 +213,7 @@ JOIN Regions r ON r.Region_ID=c.Region_ID
 WHERE r.Region_Name LIKE 'Europe'
 
 -- Таблица Employees, Departments. Показать все департаменты в которых работают больше 30ти сотрудников
-select Departments.Department_ID, COUNT(Employees.Employee_ID) from Departments 
+select Departments.Department_ID, COUNT(Employees.Employee_ID) from Departments
 join Employees on Departments.Department_ID = Employees.Department_ID
 group by Departments.Department_ID
 having COUNT(Employees.Employee_ID) > 30
@@ -223,7 +223,7 @@ SELECT e.* FROM Employees e LEFT JOIN Departments d ON d.Department_ID=e.Departm
 WHERE d.Department_Name is null
 
 --Таблица Employees, Departaments. Показать все департаменты в которых нет ни одного сотрудника
-select Departments.Department_ID, COUNT(Employees.Employee_ID) from Departments 
+select Departments.Department_ID, COUNT(Employees.Employee_ID) from Departments
 left join Employees on Departments.Department_ID = Employees.Department_ID
 group by Departments.Department_ID
 having COUNT(Employees.Employee_ID) = 0
@@ -232,13 +232,13 @@ having COUNT(Employees.Employee_ID) = 0
 SELECT m.* FROM Employees e RIGHT JOIN Employees m on m.Employee_ID=e.Manager_ID WHERE e.Last_Name is null
 
 --Таблица Employees. Получить список сотрудников менеджеры которых устроились на работу в 2005ом году но при это сами эти работники устроились на работу до 2005 года
-SELECT e.* FROM Employees e 
-left JOIN Employees m ON e.Manager_ID=m.Employee_ID 
+SELECT e.* FROM Employees e
+left JOIN Employees m ON e.Manager_ID=m.Employee_ID
 WHERE YEAR(e.Hire_Date)<2005 AND YEAR(m.Hire_Date)=2005
 
 --Таблица Employees. Получить список сотрудников менеджеры которых устроились на работу в январе месяце любого года и длина job_title этих сотрудников больше 15ти символов
-SELECT e.* FROM Employees e 
-JOIN Employees m ON e.Manager_ID=m.Employee_ID 
+SELECT e.* FROM Employees e
+JOIN Employees m ON e.Manager_ID=m.Employee_ID
 JOIN Jobs j ON e.Job_ID=j.Job_ID
 WHERE LEN(j.Job_Title)>15 AND MONTH(m.Hire_Date)=1
 
@@ -278,12 +278,12 @@ join Jobs on Employees.Job_ID = Jobs.Job_ID
 join Departments on Departments.Department_ID = Employees.Department_ID
 
 --Таблица Employees. Получить список сотрудников менеджеры которых устроились на работу в 2005ом году но при это сами эти работники устроились на работу до 2005 года
-SELECT * FROM Employees WHERE YEAR(Hire_Date)<2005 and 
-Manager_ID in (SELECT m.Employee_ID FROM Employees m WHERE YEAR(Hire_Date)=2005
+SELECT * FROM Employees WHERE YEAR(Hire_Date)<2005 and
+Manager_ID in (SELECT m.Employee_ID FROM Employees m WHERE YEAR(Hire_Date)=2005)
 
 --Таблица Employees. Получить список сотрудников менеджеры которых устроились на работу в январе месяце любого года и длина job_title этих сотрудников больше 15ти символов
 select * from Employees
-as T join Jobs on Jobs.Job_ID = T.Job_ID 
+as T join Jobs on Jobs.Job_ID = T.Job_ID
 where MONTH((select Hire_Date from Employees where Employee_ID = T.Manager_ID)) = 1 and len(Jobs.Job_Title) > 15
 
 

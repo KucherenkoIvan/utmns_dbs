@@ -12,7 +12,7 @@ create table Countries
  )  
 
 create table Locations
- (Location_ID int Primary key not null,
+ (Location_ID int Primary key identity(2000, 100);
   Street_Address varchar(40),
   Postal_Code varchar(12),
   City varchar(30) not null,
@@ -49,23 +49,24 @@ create table Job_History
 
  create table Employees
  (Employee_ID int PRIMARY KEY not null, 
-  First_Name varchar(20), 
+  First_Name varchar(20) not null, 
   Last_Name varchar(25) not null, 
   Email varchar(20) not null,
-  Phone_Number varchar(20), 
+  Phone_Number varchar(20) not null,
   Hire_Date date not null,
   Job_ID varchar(10) FOREIGN KEY REFERENCES Jobs(Job_ID) not null,
-  Salary int,
-  Commission_Pct int,
-  Manager_ID int FOREIGN KEY REFERENCES Employees(Employee_ID) not null,
+  Salary int not null,
+  Commission_Pct float,
+  Manager_ID int FOREIGN KEY REFERENCES Employees(Employee_ID),
   Department_ID int FOREIGN KEY REFERENCES Departments(Department_ID) not null
  )
 
 
+go
 Alter Table Departments add FOREIGN KEY(Manager_ID) REFERENCES Employees(Employee_ID)
-
+go
 Alter Table Job_History add FOREIGN KEY(Employee_ID) REFERENCES Employees(Employee_ID)
-
+go
 
 
 
