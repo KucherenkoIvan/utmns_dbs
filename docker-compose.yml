@@ -1,37 +1,21 @@
 version: "3.5"
 
 services:
-  postgres:
-    container_name: utmn_dbs_postgres
-    image: postgres
+  mssql:
+    container_name: utmn_dbs_mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
-      POSTGRES_USER: stud
-      POSTGRES_PASSWORD: stud123
-      PGDATA: /data/postgres
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "123456"
     volumes:
-      - postgres:/data/postgres
+      - mssql:/var/opt/mssql
     networks:
-      - postgres
-    restart: unless-stopped
-
-  pgadmin:
-    container_name: utmn_dbs_admin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@email.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-
-    networks:
-      - postgres
+      - utmn_dbs
     restart: unless-stopped
 
 networks:
-  postgres:
+  utmn_dbs:
     driver: bridge
 
 volumes:
-  postgres:
-  pgadmin:
+  mssql:
