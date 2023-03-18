@@ -12,6 +12,20 @@ values (1, 'CEO'),
 SET IDENTITY_INSERT Positions OFF
 go;
 
+SET IDENTITY_INSERT ProjectRoles ON
+insert into ProjectRoles(id, name)
+values (1, 'Owner'),
+       (2, 'Maintainer'),
+       (3, 'Collaborator')
+SET IDENTITY_INSERT ProjectRoles OFF
+go;
+
+SET IDENTITY_INSERT Projects ON
+insert into Projects(id, name)
+values (1, 'Main Project')
+SET IDENTITY_INSERT Projects OFF
+go;
+
 SET IDENTITY_INSERT Users ON
 insert into Users(id, email, nickname, position_id)
 values (1, 'ceo@email.com', 'im_a_ceo', 1),
@@ -32,6 +46,22 @@ values (1, 'ceo@email.com', 'im_a_ceo', 1),
 SET IDENTITY_INSERT Users OFF
 go;
 
+insert into ProjectParticipants(project_id, user_id, role_id)
+values (1, 1, 1),
+       (1, 2, 2),
+       (1, 3, 2),
+       (1, 4, 2),
+       (1, 5, 2),
+       (1, 6, 3),
+       (1, 7, 3),
+       (1, 8, 3),
+       (1, 9, 3),
+       (1, 10, 3),
+       (1, 11, 3),
+       (1, 12, 3),
+       (1, 13, 3)
+go;
+
 insert into TaskStatuses(id, name)
 values (1, 'backlog'),
        (2, 'todo'),
@@ -41,14 +71,14 @@ values (1, 'backlog'),
        (6, 'done')
 go;
 
-insert into Tasks(name, description, approve, time_spent, status_id, assignee, author)
+insert into Tasks(name, description, time_spent, status_id, assignee, author, project_id)
 select concat('test_task_name ', u1.id, u2.id, u3.id)                                         as name,
        concat('some description idk ', u1.id, u2.id, u3.id)                                   as description,
-       cast(round(rand(u2.id * 10000 - u3.id), 1) as bit)                                     as approve,
        cast(round(rand(u1.id * 10000 + u2.id * 10000 + u3.id) * 1000 * 60 * 12, 0) as bigint) as time_spent,
        (round(rand(u2.id * 10000 + u2.id * 10000 + u3.id * u3.id) * 5, 0)) + 1                as status_id,
        (round(rand(u1.id * 10000 - u3.id) * 11, 0)) + 3                                       as assignee,
-       (round(rand(u2.id * 10000 - u3.id) * 4, 0)) + 1                                        as author
+       (round(rand(u2.id * 10000 - u3.id) * 4, 0)) + 1                                        as author,
+       1                                                                                      as project_id
 from Users u1
          cross join Users u2
          cross join Users u3
