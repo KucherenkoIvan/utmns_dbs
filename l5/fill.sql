@@ -109,3 +109,8 @@ select 'test comment' as comment, greatest(author, assignee) as author, id as ta
 from Tasks
 go;
 
+
+insert into Tasks(name, description, time_spent, start_date, end_date, parent_id, project_id, status_id, assignee,
+                  author) values ('subtask', 'subtask for task 1', 0, GETDATE(), null, 1, 1, 1, 1, 1)
+go;
+
