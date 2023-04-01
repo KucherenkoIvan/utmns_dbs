@@ -1,6 +1,6 @@
 use L5;
 go;
--- 1. при создании подзадачи автоматически копировать часть инфы из родителя
+-- 1. при создании подзадачи автоматически копировать название из родителя
 drop trigger if exists subtask_trigger;
 go;
 
@@ -9,7 +9,7 @@ create trigger subtask_trigger
     after insert
     as
     update Tasks
-    set description = (select description from Tasks where id = (select parent_id from inserted))
+    set name = (select name from Tasks where id = (select parent_id from inserted))
     where id = (select id from inserted)
 go;
 
@@ -17,7 +17,7 @@ go;
 insert into Tasks(name, status_id, assignee, author, parent_id, project_id)
 values ('trigger test', 3, 2, 1, 1, 1);
 
-select description
+select name
 from Tasks
 where name = 'trigger test';
 
@@ -80,7 +80,7 @@ where parent_id = 1;
 
 go;
 
--- 3. после изменения части инфы в родительской таске менять ее в дочерней
+-- 3. после изменения автора в родительской таске менять ее в дочерней
 drop trigger if exists subtask_update_author;
 go;
 
@@ -134,7 +134,7 @@ from Users
 where id = 1;
 go;
 
--- 5. триггер на работу со схемой. Выводи ивент, дату, имя пользователя, ip пользователя, хостнейм пользователя
+-- 5. триггер на работу со схемой. Выводит ивент, дату, имя пользователя, ip пользователя, хостнейм пользователя
 drop table if exists log_table_ddl
 go;
 
