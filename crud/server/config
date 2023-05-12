@@ -1,0 +1,10 @@
+NODE_ENV=development
+APP_PORT=5000
+DB_PORT=1433
+DB_USER=SA
+DB_NAME=crud_db
+DB_PASSWORD="!Password123"
+DB_HOST=mssql
+ARGON_SALT=some_salt
+ARGON_SECRET=some_secret
+JWT_SECRET=some_secret

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "build",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "target": "ES6",
+    "moduleResolution": "Node"
+  },
+  "sourceMap": true
+}

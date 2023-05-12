@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  frontend:
+    restart: unless-stopped
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    build:
+      context: ./client
+      dockerfile: ./docker/development/Dockerfile
+    command: yarn start
+    ports:
+      - 3000:3000
+
+  backend:
+    restart: unless-stopped
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    build:
+      context: ./server
+      dockerfile: ./docker/development/Dockerfile
+    ports:
+      - 5000:5000
+
+  mssql:
+    build:
+      context: ./db
+      dockerfile: ./Dockerfile
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "!Password123"
+      DB_NAME: crud_db
+    volumes:
+      - mssql:/var/opt/mssql
+    ports:
+      - 1433:1433
+    networks:
+      - default
+    restart: unless-stopped
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  mssql:
