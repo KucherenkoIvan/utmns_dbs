@@ -1,23 +1,54 @@
-import { useContext } from "react";
-import { Container, Content, FlexboxGrid, Footer } from "rsuite";
+import { useContext, useEffect, useState } from "react";
+import { Button, Container, Content, Footer, Panel, Stack } from "rsuite";
 import styled from "styled-components";
+import { api } from "../api";
 import { LoginContext } from "../context/loginContext";
 
-const StyledGrid = styled(FlexboxGrid)`
-  height: 100%;
+const StyledContent = styled(Content)`
+  padding: 24px;
+  background-color: #fff;
 `;
 
 export const MainPage = () => {
-  const t = useContext(LoginContext);
-  console.log(t);
+  const [userInfo, setUserInfo] = useState<any>({});
+
+  const ctx = useContext(LoginContext);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await api.get("/user/info", {
+          params: { userId: ctx.id },
+        });
+        setUserInfo(data);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, [ctx.id]);
 
   return (
     <Container>
-      <Content>
-        <StyledGrid justify="center" align="middle">
-          awdawd
-        </StyledGrid>
-      </Content>
+      <StyledContent>
+        <Stack spacing={8} direction="column" alignItems="stretch">
+          <Panel header="UID" bordered>
+            {userInfo.id}
+          </Panel>
+          <Panel header="nickname" bordered>
+            {userInfo.nickname}
+          </Panel>
+          <Panel header="email" bordered>
+            {userInfo.email}
+          </Panel>
+          <Panel header="Position" bordered>
+            {userInfo?.position?.name}
+          </Panel>
+
+          <Button appearance="primary" onClick={ctx.logOut}>
+            Выйти
+          </Button>
+        </Stack>
+      </StyledContent>
       <Footer>Работа выполнена Цепа Максимом и Кучеренко Иваном</Footer>
     </Container>
   );

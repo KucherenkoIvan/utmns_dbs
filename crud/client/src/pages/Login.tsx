@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   Button,
   ButtonToolbar,
@@ -10,12 +9,17 @@ import {
   Panel,
 } from "rsuite";
 import styled from "styled-components";
+import { api } from "../api";
 import { writeLoginToStorage } from "../context/loginContext";
 import { useChangeHandler } from "../hooks/useChangeHandler";
 import { useNotification } from "../hooks/useNotification";
 
 const StyledGrid = styled(FlexboxGrid)`
   height: 100%;
+`;
+
+const StyledForm = styled(Panel)`
+  background-color: #fff;
 `;
 
 const defaultValues = { nickname: "", password: "" };
@@ -30,7 +34,7 @@ export const LoginPage = ({
 
   const loginClickHandler = async () => {
     try {
-      const { data } = await axios.post(
+      const { data } = await api.post(
         "http://localhost:5000/api/user/auth",
         value
       );
@@ -47,7 +51,7 @@ export const LoginPage = ({
       <Content>
         <StyledGrid justify="center" align="middle">
           <FlexboxGrid.Item colspan={12}>
-            <Panel header={<h3>Вход</h3>} bordered>
+            <StyledForm header={<h3>Вход</h3>} bordered>
               <Form fluid>
                 <Form.Group>
                   <Form.ControlLabel>Имя пользователя</Form.ControlLabel>
@@ -74,7 +78,7 @@ export const LoginPage = ({
                   </ButtonToolbar>
                 </Form.Group>
               </Form>
-            </Panel>
+            </StyledForm>
           </FlexboxGrid.Item>
         </StyledGrid>
       </Content>

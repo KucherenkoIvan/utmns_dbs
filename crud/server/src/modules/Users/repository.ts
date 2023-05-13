@@ -9,6 +9,7 @@ export interface UserRepository extends Repository<UserAttributes> {
     positionId: UserAttributes["positionId"]
   ): Promise<void>;
   find(nickname: UserAttributes["nickname"]): Promise<UserAttributes | null>;
+  getAll(): Promise<UserAttributes[]>;
 }
 
 export class UserRepository implements UserRepository {
@@ -38,12 +39,18 @@ export class UserRepository implements UserRepository {
   async getById(id: UserAttributes["id"]): Promise<UserAttributes | null> {
     const user = await User.findOne({ where: { id } });
 
-    return user || null;
+    return user?.toJSON() || null;
   }
 
   async find(nickname: UserAttributes["nickname"]): Promise<User | null> {
     const user = await User.findOne({ where: { nickname } });
 
     return user || null;
+  }
+
+  async getAll(): Promise<User[] | null> {
+    const users = await User.findAll();
+
+    return users;
   }
 }

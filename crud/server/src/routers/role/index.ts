@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { HttpRoleController } from "modules/ProjectRoles/controller";
-import { RoleRepository } from "modules/ProjectRoles/repository";
+import { ProjectRoleRepository } from "modules/ProjectRoles/repository";
 import { ProjectRoleService } from "modules/ProjectRoles/service";
 
-const repo = new RoleRepository();
+const repo = new ProjectRoleRepository();
 const service = new ProjectRoleService(repo);
 const controller = new HttpRoleController(service);
 

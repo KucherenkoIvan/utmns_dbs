@@ -7,20 +7,20 @@ import {
   Model,
 } from "sequelize";
 
-export interface PositionAttributes {
+export interface ProjectAttributes {
   id: number;
   name: string;
 }
 
-class Position
-  extends Model<InferAttributes<Position>, InferCreationAttributes<Position>>
-  implements PositionAttributes
+class Project
+  extends Model<InferAttributes<Project>, InferCreationAttributes<Project>>
+  implements ProjectAttributes
 {
   id: CreationOptional<number>;
   name: string;
 }
 
-Position.init(
+Project.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -32,11 +32,11 @@ Position.init(
     },
   },
   {
-    tableName: "Positions",
+    tableName: "Projects",
     sequelize: db,
   }
 );
 
-db.define(Position.tableName, Position.getAttributes());
+db.define(Project.tableName, Project.getAttributes());
 
-export default Position;
+export default Project;

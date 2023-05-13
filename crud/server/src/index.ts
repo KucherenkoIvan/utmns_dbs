@@ -22,4 +22,4 @@ function startServer() {
   });
 }
 
-db.sync({ force: true }).then(seed).then(startServer);
+setTimeout(() => db.sync({ force: true }).then(seed).then(startServer), 10000);

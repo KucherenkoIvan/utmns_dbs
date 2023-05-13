@@ -8,7 +8,7 @@ export interface ProjectRoleRepository
   getAll(): Promise<ProjectRoleAttributes[]>;
 }
 
-export class RoleRepository implements ProjectRoleRepository {
+export class ProjectRoleRepository implements ProjectRoleRepository {
   async exists(
     field: keyof ProjectRoleAttributes,
     value: string | number

@@ -35,7 +35,7 @@ ProjectRole.init(
     },
   },
   {
-    tableName: "Roles",
+    tableName: "ProjectRoles",
     sequelize: db,
   }
 );

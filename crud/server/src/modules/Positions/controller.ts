@@ -2,20 +2,20 @@ import { Request, Response } from "express";
 import { HttpError } from "types/HttpError";
 import { PositionsService } from "./service";
 
-export class HttpRoleController {
-  private readonly _roleService: PositionsService;
+export class HttpPositionController {
+  private readonly _positionService: PositionsService;
 
-  constructor(roleService: PositionsService) {
-    this._roleService = roleService;
+  constructor(positionService: PositionsService) {
+    this._positionService = positionService;
   }
 
-  async getRole(req: Request, res: Response) {
+  async getPosition(req: Request, res: Response) {
     const { name } = req.params;
 
     try {
-      const role = await this._roleService.findByName(String(name));
+      const position = await this._positionService.findByName(String(name));
 
-      res.json(role);
+      res.json(position);
     } catch (error) {
       new HttpError(res, error.message, 500);
     }

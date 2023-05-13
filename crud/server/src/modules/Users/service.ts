@@ -16,6 +16,8 @@ export interface UsersService {
     nickname: UserAttributes["nickname"],
     password: UserAttributes["password"]
   ): Promise<UserAttributes>;
+  getInfo(id: UserAttributes["id"]): Promise<UserAttributes>;
+  getAll(): Promise<UserAttributes[]>;
 }
 
 export class UserService implements UsersService {
@@ -85,5 +87,18 @@ export class UserService implements UsersService {
     }
 
     return candidate;
+  }
+
+  async getInfo(id: UserAttributes["id"]) {
+    const user = await this._userRepo.getById(id);
+    const position = await this._positionRepo.getById?.(user.positionId);
+
+    return { ...user, position };
+  }
+
+  async getAll() {
+    const users = await this._userRepo.getAll();
+
+    return users;
   }
 }

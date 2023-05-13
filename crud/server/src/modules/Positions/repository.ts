@@ -12,9 +12,9 @@ export class PositionRepository implements PositionsRepository {
     field: keyof PositionAttributes,
     value: string | number
   ): Promise<boolean> {
-    const role = await Position.findOne({ where: { [field]: value } });
+    const position = await Position.findOne({ where: { [field]: value } });
 
-    return Boolean(role);
+    return Boolean(position);
   }
 
   async save(name: Position["name"]): Promise<void> {
@@ -22,14 +22,22 @@ export class PositionRepository implements PositionsRepository {
   }
 
   async find(name: Position["name"]): Promise<Position | null> {
-    const role = await Position.findOne({ where: { name } });
+    const position = await Position.findOne({ where: { name } });
 
-    return role || null;
+    return position || null;
   }
 
   async getAll(): Promise<Position[]> {
-    const roles = await Position.findAll();
+    const positions = await Position.findAll();
 
-    return roles;
+    return positions;
+  }
+
+  async getById(
+    id: PositionAttributes["id"]
+  ): Promise<PositionAttributes | null> {
+    const position = await Position.findOne({ where: { id } });
+
+    return position || null;
   }
 }

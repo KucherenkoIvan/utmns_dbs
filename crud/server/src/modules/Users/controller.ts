@@ -74,4 +74,26 @@ export class HttpUserController {
       new HttpError(res, error.message, 500);
     }
   }
+
+  async getInfo(req: Request, res: Response) {
+    const { userId } = req.query;
+
+    try {
+      const data = await this._userService.getInfo(userId as string);
+
+      res.json(data);
+    } catch (error) {
+      new HttpError(res, error.message, 500);
+    }
+  }
+
+  async getAll(req: Request, res: Response) {
+    try {
+      const data = await this._userService.getAll();
+
+      res.json(data);
+    } catch (error) {
+      new HttpError(res, error.message, 500);
+    }
+  }
 }
