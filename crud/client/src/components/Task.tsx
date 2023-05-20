@@ -38,12 +38,7 @@ const rolePresets: {
 
 const iconProps = { style: { width: 16, height: 16 } };
 
-export const ProjectParticipant = ({
-  roleId,
-  userId,
-  projectId,
-  afterChange,
-}: Props) => {
+export const Task = ({ roleId, userId, projectId, afterChange }: Props) => {
   const triggerRef = useRef(null);
   const [userInfo, setUserInfo] = useState<any>({});
   const { notify } = useNotification();
