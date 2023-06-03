@@ -31,9 +31,6 @@ export const MainPage = () => {
     <Container>
       <StyledContent>
         <Stack spacing={8} direction="column" alignItems="stretch">
-          <Panel header="UID" bordered>
-            {userInfo.id}
-          </Panel>
           <Panel header="nickname" bordered>
             {userInfo.nickname}
           </Panel>

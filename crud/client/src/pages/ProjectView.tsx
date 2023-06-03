@@ -80,9 +80,6 @@ export const ProjectView = () => {
     <Container>
       <StyledContent>
         <Stack spacing={8} direction="column" alignItems="stretch">
-          <Panel header="ID" bordered>
-            {projectId}
-          </Panel>
           <Panel header="Название проекта" bordered>
             {projectInfo.name}
           </Panel>

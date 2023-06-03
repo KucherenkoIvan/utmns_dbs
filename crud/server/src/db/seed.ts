@@ -193,5 +193,7 @@ export async function seed() {
   await taskStatusService.createTaskStatus("testing");
   await taskStatusService.createTaskStatus("done");
 
+  const taskRepo = null;
+
   console.log("Seeding finished");
 }
