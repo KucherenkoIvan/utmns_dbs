@@ -82,6 +82,12 @@ select concat('test_task_name ', u1.id, u2.id, u3.id)                           
 from Users u1
          cross join Users u2
          cross join Users u3
+         cross join Users u4
+         cross join Users u5
+--          cross join Users u6
+--          cross join Users u7
+--          cross join Users u8
+--          cross join Users u9
 go;
 
 with Temp(num, curr, prev) as (select row_number() over (order by u1.id + u2.id) as num,
