@@ -1,3 +1,4 @@
+import TaskIcon from "@rsuite/icons/legacy/Plus";
 import PlusIcon from "@rsuite/icons/legacy/UserPlus";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -20,13 +21,22 @@ export const ProjectView = () => {
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const { projectId } = useParams();
 
-  const [isModalOpen, setModalOpen] = useState(false);
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => {
+  const [isInviteModalOpen, setInviteModalOpen] = useState(false);
+  const openInviteModal = () => setInviteModalOpen(true);
+  const closeInviteModal = () => {
     setProjectInfo({});
     setusersIds([]);
     setLastChanged(new Date());
-    setModalOpen(false);
+    setInviteModalOpen(false);
+  };
+
+  const [isTaskModalOpen, setTaskModalOpen] = useState(false);
+  const openTaskModal = () => setTaskModalOpen(true);
+  const closeTaskModal = () => {
+    setProjectInfo({});
+    setusersIds([]);
+    setLastChanged(new Date());
+    setTaskModalOpen(false);
   };
 
   const ctx = useContext(LoginContext);
@@ -69,9 +79,6 @@ export const ProjectView = () => {
     <Container>
       <StyledContent>
         <Stack spacing={8} direction="column" alignItems="stretch">
-          <Panel header="ID" bordered>
-            {projectId}
-          </Panel>
           <Panel header="Название проекта" bordered>
             {projectInfo.name}
           </Panel>
@@ -91,7 +98,48 @@ export const ProjectView = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      openModal();
+                      openInviteModal();
+                    }}
+                  />
+                )}
+              </Stack>
+            }
+            bordered
+            collapsible
+            defaultExpanded
+          >
+            <Stack spacing={8} alignItems="flex-start" wrap>
+              {usersIds.map(({ roleId, userId }) => (
+                <ProjectParticipant
+                  roleId={roleId}
+                  userId={userId}
+                  projectId={Number(projectId)}
+                  afterChange={() => {
+                    setProjectInfo({});
+                    setusersIds([]);
+                    setLastChanged(new Date());
+                  }}
+                />
+              ))}
+            </Stack>
+          </Panel>
+
+          {/* ---------------------------------------- */}
+
+          <Panel
+            header={
+              <Stack>
+                <div>Задачи</div>
+                {Number(ctx.currentProjectRole) < ProjectRoles.COLLABORATOR && (
+                  <IconButton
+                    circle
+                    size="sm"
+                    style={{ marginLeft: "16px" }}
+                    icon={<TaskIcon />}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      openTaskModal();
                     }}
                   />
                 )}
@@ -120,8 +168,8 @@ export const ProjectView = () => {
         <AddUsersModal
           availableUsers={availableUsers}
           projectId={Number(projectId)}
-          open={isModalOpen}
-          close={closeModal}
+          open={isInviteModalOpen}
+          close={closeInviteModal}
         />
       </StyledContent>
       <Footer>Работа выполнена Цепа Максимом и Кучеренко Иваном</Footer>
