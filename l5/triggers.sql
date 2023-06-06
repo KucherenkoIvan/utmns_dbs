@@ -17,7 +17,7 @@ go;
 insert into Tasks(name, status_id, assignee, author, parent_id, project_id)
 values ('trigger test', 3, 2, 1, 1, 1);
 
-select name
+select name, parent_id
 from Tasks
 where name = 'trigger test';
 

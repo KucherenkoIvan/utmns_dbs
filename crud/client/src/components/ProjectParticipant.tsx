@@ -117,6 +117,11 @@ export const ProjectParticipant = ({
       >
         <Panel
           shaded
+          style={{
+            cursor: currentProjectRole < roleId ? "pointer" : "not-allowed",
+            display: "inline-block",
+            width: 240,
+          }}
           bordered
           header={
             <Stack justifyContent="space-between">
@@ -126,7 +131,6 @@ export const ProjectParticipant = ({
               </Tag>
             </Stack>
           }
-          style={{ display: "inline-block", width: 240 }}
         >
           {userInfo.email}
         </Panel>

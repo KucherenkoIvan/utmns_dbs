@@ -6,6 +6,8 @@ import { ProjectRoleRepository } from "@/modules/ProjectRoles/repository";
 import { ProjectRoleService } from "@/modules/ProjectRoles/service";
 import { ProjectRepository } from "@/modules/Projects/repository";
 import { ProjectService } from "@/modules/Projects/service";
+import { TaskStatusRepository } from "@/modules/TaskStatuses/repository";
+import { TaskStatusService } from "@/modules/TaskStatuses/service";
 import { PositionRepository } from "modules/Positions/repository";
 import { PositionService } from "modules/Positions/service";
 import { UserRepository } from "../modules/Users/repository";
@@ -180,6 +182,18 @@ export async function seed() {
     ProjectRoles.COLLABORATOR,
     qa.id
   );
+
+  const taskStatusRepo = new TaskStatusRepository();
+  const taskStatusService = new TaskStatusService(taskStatusRepo);
+
+  await taskStatusService.createTaskStatus("backlog");
+  await taskStatusService.createTaskStatus("todo");
+  await taskStatusService.createTaskStatus("in progress");
+  await taskStatusService.createTaskStatus("review");
+  await taskStatusService.createTaskStatus("testing");
+  await taskStatusService.createTaskStatus("done");
+
+  const taskRepo = null;
 
   console.log("Seeding finished");
 }
